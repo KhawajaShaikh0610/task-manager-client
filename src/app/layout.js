@@ -2,10 +2,8 @@
 import { Provider } from "react-redux";
 import { AuthProvider } from "../context/AuthContext";
 import { store } from "./redux/store";
-
-// export const metadata = {
-//   title: "Task App",
-// };
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
