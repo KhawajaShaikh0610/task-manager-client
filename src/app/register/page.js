@@ -3,10 +3,12 @@ import { useAuth } from "../../context/AuthContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const { register } = useAuth();
   const [registerError, setRegisterError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -39,6 +41,16 @@ export default function RegisterPage() {
       }
     },
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push("/");
+  };
 
   return (
     <div className="register-container">
@@ -92,24 +104,34 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <div className="form-group">
+        <div className="form-group password-group">
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            placeholder="Enter your password"
-            className={`form-input ${
-              formik.touched.password && formik.errors.password
-                ? "input-error"
-                : ""
-            }`}
-          />
+          <div className="password-input-container">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="Enter your password"
+              className={`form-input ${
+                formik.touched.password && formik.errors.password
+                  ? "input-error"
+                  : ""
+              }`}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={togglePasswordVisibility}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "🔓" : "🔒"}
+            </button>
+          </div>
           {formik.touched.password && formik.errors.password && (
             <div className="error-message">{formik.errors.password}</div>
           )}
@@ -128,6 +150,17 @@ export default function RegisterPage() {
             "Register"
           )}
         </button>
+
+        <div className="auth-footer">
+          <p className="footer-text">Already have an account?</p>
+          <button
+            type="button"
+            onClick={handleNavigate}
+            className="footer-button"
+          >
+            Login here
+          </button>
+        </div>
       </form>
     </div>
   );
